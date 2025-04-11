@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Root Variables */
+        :root {
+            --bg: rgba(230, 230, 230, 0.4);
+            --primary: rgb(209, 231, 231);
+            --danger: rgb(248, 99, 99);
+        }
+    
+        /* Global Reset & Base Styles */
+        * {
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 80%;
+            transition: all 0.16s ease-in;
+        }
+    
+        body {
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            background-color: rgba(211, 211, 211, 0.1);
+            border-radius: 1rem;
+        }
+    
+        /* .container */
+        .container {
+            max-width: 100%;
+            width: 400px;
+            max-width: 90vw;
+            margin: 2rem auto;
+            padding: 1rem;
+            border-radius: 1rem;
+            background-color: white;
+            box-shadow: 0px 4px 20px 0 #3a41562e;
+        }
+    
+        /* <form id="elave-et_form"> */
+        form,
+        #list {
+            display: flex;
+        }
+    
+        #elave-et_form {
+            gap: 0.3rem;
+            justify-content: space-between;
+        }
+    
+        /* <input> inside form */
+        input {
+            padding: 0.6rem 1rem;
+            border-radius: 1rem;
+            font-size: 1rem;
+            font-weight: 500;
+            background-color: var(--bg);
+            border: 1px solid transparent;
+            outline: none;
+            width: calc(100% - 1rem);
+        }
+    
+        input:focus {
+            background-color: white;
+            border: 1px solid var(--bg);
+        }
+    
+        /* <button id="elave-et_btn"> inside form */
+        form button {
+            cursor: pointer;
+            width: 45px;
+            height: 40px;
+            padding: 0;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--primary);
+            color: white;
+            font-weight: 800;
+            font-size: 1.5rem;
+            transition: transform 0.16s ease-in;
+        }
+    
+        form button:hover,
+        .task button:hover {
+            transform: scale(0.9);
+        }
+    
+        /* <div id="list"> */
+        #list {
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            max-height: calc(100vh - 10rem);
+            overflow-y: auto;
+        }
+    
+        /* <div class="task"> and <div class="task done"> */
+        .task {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            justify-content: space-between;
+            padding: 0.5rem 0.8rem;
+            border-radius: 0.5rem;
+            background-color: var(--primary);
+            border: 1px solid transparent;
+            cursor: pointer;
+            position: relative;
+        }
+    
+        .task.done {
+            background-color: white;
+            border: 1px solid var(--primary);
+            order: 1;
+        }
+    
+        .task span {
+            margin-right: auto;
+        }
+    
+        .task.done span {
+            text-decoration: line-through;
+        }
+    
+        .task::before {
+            content: url("circle-solid.svg");
+            display: inline-block;
+            width: 24px;
+            margin-right: 0.6rem;
+        }
+    
+        .task.done::before {
+            content: url("circle-check-solid.svg");
+        }
+    
+        /* <button class="sil_btn"> inside .task */
+        .task button {
+            background: white;
+            border: none;
+            border-radius: 50%;
+            padding: 0;
+            cursor: pointer;
+        }
+    
+        .task button::after {
+            content: url("trash-solid.svg");
+            display: inline-block;
+            width: 1.6rem;
+            height: 1.6rem;
+        }
+    
+        /* Utility Class */
+        .check {
+            width: 14px;
+            height: 14px;
+        }
+        form {
+            position: relative;
+        }
+        input.error {
+            border: 1px solid var(--danger);
+        }
+        #error {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            right: 0;
+            color: var(--danger);
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            font-weight: 500;
+            animation: bounce .5s ease-in-out infinite;
+            visibility: hidden;
+            opacity: 0;
+            text-align: center;
+            width: calc(100% - 40px);
+        }
+        #error.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+    </style>
+    
+    <title>ToDo List</title>
+</head>
+
+<body>
+    <div class="container">
+        <form id="elave-et_form">
+            <input type="text" name="" id="inp_task" placeholder="Task">
+            <div id="error">
+                Taskın adını daxil edin
+            </div>
+            <button id="elave-et_btn" type="submit">
+                <!-- Elave et -->
+                +
+            </button>
+        </form>
+        <div id="list">
+            <div class="task done">
+                <span>Lorem ipsum dolor sit amet.</span>
+                <button class="sil_btn" type="button">
+
+                </button>
+            </div>
+            <div class="task">
+                <span>Lorem ipsum dolor sit amet.</span>
+                <button class="sil_btn" type="button">
+
+                </button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const elaveEtForm = document.getElementById('elave-et_form');
+        elaveEtForm.addEventListener('submit', taskElaveEt);
+        function taskElaveEt(e) {
+            e.preventDefault();
+            const taskName = document.getElementById('inp_task').value;
+
+            if (taskName === null | taskName === '') {
+                addError();
+            } else {
+                removeError();
+                let taskName = document.getElementById('inp_task');
+                const taskContainer = document.getElementById('list');
+                // creating elements for task
+                const taskEl = document.createElement('div');
+                const taskText = document.createElement('span');
+                const delBtn = document.createElement('button');
+                // adding attributes
+                delBtn.setAttribute('type', 'button');
+                // placing them
+                taskEl.appendChild(taskText);
+                taskEl.appendChild(delBtn);
+                // adding classes
+                taskEl.classList.add('task');
+                // adding content
+                taskText.textContent = taskName.value;
+                taskName.value = '';
+                // adding a task to the list
+                taskContainer.appendChild(taskEl);
+            }
+        }
+        function addError() {
+            const errorEl = document.getElementById('error');
+            let taskInp = document.getElementById('inp_task');
+            errorEl.classList.add('active');
+            taskInp.classList.add('error');
+        }
+        function removeError() {
+            const errorEl = document.getElementById('error');
+            let taskInp = document.getElementById('inp_task');
+            errorEl.classList.remove('active');
+            taskInp.classList.remove('error');
+        }
+        const list = document.getElementById('list');
+        list.addEventListener('click', taskDone);
+        function taskDone(e) {
+            const target = e.target;
+            if (target.nodeName === 'BUTTON') {
+                setTimeout(() => {
+                    target.parentElement.remove();
+                }, 240);
+            } else {
+                const task = target.closest('.task');
+                if(task) task.classList.toggle('done');
+            }
+        }
+    </script>
+</body>
+
+</html>
