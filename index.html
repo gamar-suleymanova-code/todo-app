@@ -95,11 +95,12 @@
         #list {
             flex-direction: column;
             gap: 0.5rem;
-            margin-top: 1rem;
             max-height: calc(100vh - 10rem);
             overflow-y: auto;
         }
-    
+        #list:has(.task) {
+            margin-top: 1rem;
+        }
         /* <div class="task"> and <div class="task done"> */
         .task {
             display: flex;
@@ -211,18 +212,6 @@
             </button>
         </form>
         <div id="list">
-            <div class="task done">
-                <span>Lorem ipsum dolor sit amet.</span>
-                <button class="sil_btn" type="button">
-
-                </button>
-            </div>
-            <div class="task">
-                <span>Lorem ipsum dolor sit amet.</span>
-                <button class="sil_btn" type="button">
-
-                </button>
-            </div>
         </div>
     </div>
     <script>
